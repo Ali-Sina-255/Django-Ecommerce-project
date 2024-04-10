@@ -37,9 +37,12 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    # Custom Install app
     'greatkart.apps.GreatkartConfig',
     'category.apps.CategoryConfig',
     'accounts.apps.AccountsConfig',
+    'store.apps.StoreConfig',
+    
 ]
 
 MIDDLEWARE = [

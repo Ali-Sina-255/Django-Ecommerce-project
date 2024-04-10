@@ -1,7 +1,10 @@
 from django.shortcuts import render
-from django.http import HttpResponse
+from store.models import Product
 
 
 def home(request):
-    return render(request, 'base.html')
-# Create your views here.
+    products = Product.objects.all().filter(is_available=True)
+
+    return render(request, 'store/home.html',{
+        "products":products
+    })
