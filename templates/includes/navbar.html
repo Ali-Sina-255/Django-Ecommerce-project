@@ -45,7 +45,7 @@
     <div class="container">
       <div class="row align-items-center">
         <div class="col-lg-2 col-md-3 col-6">
-          <a href="./" class="brand-wrap">
+          <a href="{% url 'home' %}" class="brand-wrap">
             <img class="logo" src="{% static './images/logo.png' %}" />
           </a>
           <!-- brand-wrap.// -->
@@ -60,22 +60,12 @@
               <i class="fa fa-bars"></i> All category
             </button>
             <div class="dropdown-menu">
-              <a class="dropdown-item" href="#"
-                >Machinery / Mechanical Parts / Tools
+              <a href="{% url 'store:store' %}" class="dropdown-item">All Category</a>
+              {% for cat in categories %}
+              <a class="dropdown-item" href="{{cat.get_category_url}}"
+                >{{cat.category_name}}
               </a>
-              <a class="dropdown-item" href="#"
-                >Consumer Electronics / Home Appliances
-              </a>
-              <a class="dropdown-item" href="#">Auto / Transportation</a>
-              <a class="dropdown-item" href="#"
-                >Apparel / Textiles / Timepieces
-              </a>
-              <a class="dropdown-item" href="#"
-                >Home & Garden / Construction / Lights
-              </a>
-              <a class="dropdown-item" href="#"
-                >Beauty & Personal Care / Health
-              </a>
+              {% endfor %}
             </div>
           </div>
           <!-- category-wrap.// -->
