@@ -76,12 +76,12 @@
             <h3 class='text-danger'>Out of Stock</h3>
             {% else %}
             
-            <a href="" class="btn btn-primary">
+            <a href="{% url 'cart:add_cart' single_product.id %}" class="btn btn-primary">
               <span class="text">Add to cart</span>
               <i class="fas fa-shopping-cart"></i>
             </a>
 
-            {% endif %}
+            {% endif %} 
           </article>
           <!-- product-info-aside .// -->
         </main>
