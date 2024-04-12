@@ -5,10 +5,17 @@
 
 <!-- ========================= SECTION PAGETOP ========================= -->
 <section class="section-pagetop bg">
+  {% if 'search' in request.path %}
+  <div class="container">
+
+    <h2 class="title-page ">Search Result</h2>
+  </div>
+  {% else %}
   <div class="container">
     <h2 class="title-page">Our Store</h2>
     
-  </div> <!-- container //  -->
+  </div> <!-- container //  --> 
+  {% endif %}
   </section>
   <!-- ========================= SECTION INTRO END// ========================= -->
   
@@ -128,6 +135,8 @@
   </header><!-- sect-heading -->
   
   <div class="row">
+    {% if products %}
+
     {% for product in products %}
     <div class="col-md-4">
       <figure class="card card-product-grid">
@@ -138,7 +147,7 @@
         </div> <!-- img-wrap.// -->
         <figcaption class="info-wrap">
           <div class="fix-height">
-            <a href="{{product.get_product_url}}" class="title">Great item name goes here</a>
+            <a href="{{product.get_product_url}}" class="title">{{product.product_name}}</a>
             <div class="price-wrap mt-2">
               <span class="price">$ {{product.price}}</span>
               
@@ -149,6 +158,9 @@
       </figure>
     </div> <!-- col.// -->
   {% endfor %}
+  {% else %}
+  <h2>Not Result Found, please try again.</h2>
+  {% endif %}
     
     
   </div> <!-- row end.// -->
