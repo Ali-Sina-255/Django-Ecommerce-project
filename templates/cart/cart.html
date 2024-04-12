@@ -5,7 +5,7 @@
     {% if not cart_items %}
     <h4 class="text-center">Your Shopping Cart is Empty !</h4>
     <div class="text-center">
-      <a href="" class="btn btn-primary">Continue Shopping</a>
+      <a href="{% url 'store:store' %}" class="btn btn-primary">Continue Shopping</a>
     </div>
     {% else %}
     <div class="row">
