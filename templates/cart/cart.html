@@ -51,7 +51,8 @@
                   <div class="col">
                     <div class="input-group input-spinner">
                       <div class="input-group-prepend">
-                        <a href="{% url 'cart:remove_cart' cart_item.product.id %}"
+                        <form action=""></form>
+                        <a href="{% url 'cart:remove_cart' cart_item.product.id cart_item.id %}"
                           class="btn btn-light"
                           type="button"
                           id="button-plus"
@@ -61,13 +62,19 @@
                       </div>
                       <input type="text" class="form-control" value="{{cart_item.quantity}}" />
                       <div class="input-group-append">
-                        <a href="{% url 'cart:add_cart' cart_item.product.id %}"
+                        <form action="{% url 'cart:add_cart' cart_item.product.id %}" method="POST">
+                          {% csrf_token %}
+                          {% for item in cart_item.variations.all %}
+                          <input type="hidden" name="{{item.variation_category|lower}}" value="{{item.variation_value|capfirst}}">
+                          {% endfor %}
+                        <button href=""
                           class="btn btn-light"
-                          type="button"
+                          type="submit"
                           id="button-minus"
                         >
                           <i class="fa fa-plus"></i>
-                        </a>
+                        </button>
+                      </form>
                       </div>
                     </div>
                     <!-- input-group.// -->
@@ -82,7 +89,7 @@
                   <!-- price-wrap .// -->
                 </td>
                 <td class="text-right">
-                  <a href="{% url 'cart:remove_cart_item' cart_item.product.id %}" class="btn btn-danger"> Remove</a>
+                  <a href="{% url 'cart:remove_cart_item' cart_item.product.id cart_item.id %}" onclick="return confirm('Are you sure you want to delete ths item ?')" class="btn btn-danger"> Remove</a>
                 </td>
               </tr>
               {% endfor %}
