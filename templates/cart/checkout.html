@@ -9,66 +9,65 @@
          <div class="card-body">
             <h4 class="card-title mb-4">Billing Address</h4>
 
-            <form action="">
+            <form action="" method="POST">
+                {% csrf_token %}
                 <div class="form-row mb-3">
                     <div class="col from-group">
                         <label for="">First Name</label>
-                        <input type="text" class="form-control" placeholder="Enter Your Name">
+                        <input type="text" class="form-control" name="first_name" placeholder="Enter Your Name">
                     </div>
 
                     <div class="col from-group">
                         <label for="">Last Name</label>
-                        <input type="text" class="form-control" placeholder="Enter Your Last Name">
+                        <input type="text" class="form-control" name="last_name" placeholder="Enter Your Last Name">
                     </div>
                 </div>
 
                 <div class="form-row  mb-3">
                     <div class="col from-group">
                         <label for="">Email Address</label>
-                        <input type="email" class="form-control" placeholder="Enter Your email">
+                        <input type="email" class="form-control" name="email" placeholder="Enter Your email">
                     </div>
 
                     <div class="col from-group">
                         <label for="">phone Number</label>
-                        <input type="text" class="form-control" placeholder="Enter Your phone Number">
+                        <input type="text" class="form-control" name="phone" placeholder="Enter Your phone Number">
                     </div>
                 </div>
 
                 <div class="form-row  mb-3">
                     <div class="col from-group">
                         <label for="">Address Line 1</label>
-                        <input type="email" class="form-control" placeholder="Enter Your address">
+                        <input type="email" class="form-control" name="address_line_1" placeholder="Enter Your address">
                     </div>
 
                     <div class="col from-group">
                         <label for="">Address Line 2</label>
-                        <input type="text" class="form-control" placeholder="Enter Your address">
+                        <input type="text" class="form-control" name="address_line_2" placeholder="Enter Your address">
                     </div>
                 </div>
 
                 <div class="form-row  mb-3">
                     <div class="col from-group">
                         <label for="">City </label>
-                        <input type="email" class="form-control" placeholder="Enter Your City">
+                        <input type="email" class="form-control" name="city" placeholder="Enter Your City">
                     </div>
 
                     <div class="col from-group">
                         <label for="">State</label>
-                        <input type="text" class="form-control" placeholder="Enter Your state">
+                        <input type="text" class="form-control" name="state" placeholder="Enter Your state">
                     </div>
 
                     <div class="col from-group">
                         <label for="">Country</label>
-                        <input type="text" class="form-control" placeholder="Enter Your country">
+                        <input type="text" class="form-control" name="country" placeholder="Enter Your country">
                     </div>
                 </div>
 
                 <div class="form-row">
                     <label for="">Order Note</label>
-                   <textarea name="" id="" cols="30" rows="4" class="form-control"></textarea>
-                </div>
-
-            </form>
+                   <textarea name="" id="" cols="30" rows="4" name="order_note" class="form-control"></textarea>
+                </div>           
          </div> 
         </div>
 
@@ -139,17 +138,19 @@
                 
               </table>
               <hr>
-            <a href="./place-order.html" class="btn btn-primary btn-block">
+            <button type="submit" class="btn btn-primary btn-block">
               place Order
-            </a>
+            </button>
             <a href="{% url 'store:store' %}" class="btn btn-light btn-block"
               >Continue Shopping</a
             >
           </div>
           <!-- card-body.// -->
+        </form>
         </div>
         <!-- card.// -->
       </aside>
+    
       <!-- col.// -->
     </div>
    
