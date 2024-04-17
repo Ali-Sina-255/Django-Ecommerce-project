@@ -218,7 +218,6 @@ def checkout(request, total=0, quantity=0, cart_items=None):
     grand_total = 0
     try:
         if request.user.is_authenticated:
-            
             cart_items = CartItem.objects.filter(user=request.user, is_active=True)
         else:
             cart = Cart.objects.get(cart_id=_cart_id(request))
