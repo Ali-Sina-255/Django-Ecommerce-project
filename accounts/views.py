@@ -1,13 +1,19 @@
 from django.shortcuts import render, redirect
-import requests.utils
 from carts.models import Cart, CartItem
-from . forms import RegistrationForms
-from . models import Account
+from .forms import RegistrationForms
+from .models import Account
 from django.contrib import messages, auth
 from django.contrib.auth.decorators import login_required
 from carts.views import _cart_id
 import requests
-
+from django.http import HttpResponse
+# Account verification import
+from django.contrib.auth.tokens import default_token_generator
+from django.contrib.sites.shortcuts import get_current_site
+from django.template.loader import render_to_string
+from django.utils.encoding import force_bytes
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+from django.core.mail import EmailMessage
 
 
 def register(request):
@@ -24,7 +30,20 @@ def register(request):
                 first_name=first_name, last_name=last_name, email=email, username=username, password=password)
             user.phone_number = phone_number
             user.save()
-            messages.success(request, 'Your account is creates successfully.')
+            # User Activation Process
+            current_site = get_current_site(request)
+            mail_subject = "Please Activated you account"
+            message = render_to_string('account/account_verification_email.html', {
+                "user": user,
+                "domain": current_site,
+                "uid": urlsafe_base64_encode(force_bytes(user.pk)),
+                "token": default_token_generator.make_token(user)
+            })
+            to_email = email
+            send_email = EmailMessage(mail_subject, message, to=[to_email])
+            send_email.send()
+            # messages.success(request, 'Thank you for registration with us  we have send you  a verification email to your email address. please verify it.')
+            return redirect("/account/login/?command=verification&email=" + email)
         else:
             print(form.errors)
             messages.error(
@@ -91,17 +110,17 @@ def login(request):
             messages.success(request, 'you are logged in Now')
             url = request.META.get('HTTP_REFERER')
             try:
-                query  = requests.utils.urlparse(url).query
+                query = requests.utils.urlparse(url).query
                 print('new url --------> query', query)
                 params = dict(x.split('=') for x in query.split('&'))
                 print('-------------->>>>>>>>>>', params)
                 if 'next' in params:
                     next_page = params['next']
                     return redirect(next_page)
-                
+
             except:
                 return redirect('account:dashboard')
-            
+
         else:
             messages.error(request, 'Invalid login Credentials')
             return redirect('account:login')
@@ -120,3 +139,20 @@ def logout(request):
 
 def dashboard(request):
     return render(request, 'account/dashboard.html')
+
+
+def activate(request, uidb64, token):
+    try:
+        uid = urlsafe_base64_decode(uidb64).decode()
+        user = Account._default_manager.get(pk=uid)
+    except (TypeError, ValueError, OverflowError, Account.DoesNotExist):
+        user = None
+
+    if user is not None and default_token_generator.check_token(user, token):
+        user.is_active = True
+        user.save()
+        messages.success(request, 'Congratulation your account is activated')
+        return redirect('login')
+    else:
+        messages.error(request, 'Invalid activation Link')
+        return redirect('register')

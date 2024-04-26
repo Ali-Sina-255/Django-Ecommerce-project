@@ -103,15 +103,15 @@
                 <small class="title text-muted">Welcome {{user.username}}</small>
                 <a href="#">Dashboard</a>
                 <span class="dark-transp"> | </span>
-                <a href="{% url 'account:logout' %}">Sign out</a>
+                <a href="{% url 'logout' %}">Sign out</a>
                
               </div>
               {% else %}
               <small class="title text-muted">WelcomeGuest</small>
               <div>
-                <a href="{% url 'account:login' %}">Sign in</a>
+                <a href="{% url 'login' %}">Sign in</a>
                 <span class="dark-transp"> | </span>
-                <a href="{% url 'account:register' %}"> Register</a>
+                <a href="{% url 'register' %}"> Register</a>
               </div>
               {% endif %}
               
