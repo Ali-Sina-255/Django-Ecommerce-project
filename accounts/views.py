@@ -30,6 +30,7 @@ def register(request):
                 first_name=first_name, last_name=last_name, email=email, username=username, password=password)
             user.phone_number = phone_number
             user.save()
+
             # User Activation Process
             current_site = get_current_site(request)
             mail_subject = "Please Activated you account"
@@ -119,11 +120,11 @@ def login(request):
                     return redirect(next_page)
 
             except:
-                return redirect('account:dashboard')
+                return redirect('dashboard')
 
         else:
             messages.error(request, 'Invalid login Credentials')
-            return redirect('account:login')
+            return redirect('login')
 
     return render(request, 'account/login.html')
 
@@ -134,7 +135,7 @@ login_required(login_url='login')
 def logout(request):
     auth.logout(request)
     messages.success(request, 'You are logout Now!!')
-    return redirect('account:login')
+    return redirect('login')
 
 
 def dashboard(request):
@@ -156,3 +157,65 @@ def activate(request, uidb64, token):
     else:
         messages.error(request, 'Invalid activation Link')
         return redirect('register')
+
+
+def forgot_password(request):
+    if request.method == "POST":
+        email = request.POST['email']
+        if Account.objects.filter(email=email).exists():
+            user = Account.objects.get(email__iexact=email)
+            # User Activation Process
+            current_site = get_current_site(request)
+            mail_subject = "Resat Your password"
+            message = render_to_string('account/resat_password_email.html', {
+                "user": user,
+                "domain": current_site,
+                "uid": urlsafe_base64_encode(force_bytes(user.pk)),
+                "token": default_token_generator.make_token(user)
+            })
+            to_email = email
+            send_email = EmailMessage(mail_subject, message, to=[to_email])
+            send_email.send()
+            messages.success(request, 'password resat email is has been sent to your email address')
+            return redirect('login')
+        else:
+            messages.error(request, 'Account Does Not Exist!!')
+            return redirect('forgot_password')
+
+    return render(request, 'account/forgot_password.html')
+
+
+def resat_password_validate(request, uidb64, token):
+    try:
+        uid = urlsafe_base64_decode(uidb64).decode()
+        user = Account._default_manager.get(pk=uid)
+
+    except (TypeError, ValueError, OverflowError, Account.DoesNotExist):
+        user = None
+
+    if user is not None and default_token_generator.check_token(user, token):
+        request.session['uid'] = uid
+        messages.success(request, 'Pleas resat your password')
+        return redirect('resat_password')
+    else:
+        messages.error(request, 'This link has been expired!')
+        return redirect('login')
+
+
+def resat_password(request):
+    if request.method == "POST":
+        password = request.POST['password']
+        confirm_password = request.POST['confirm_password']
+
+        if password == confirm_password:
+            uid = request.session.get('uid')
+            user = Account.objects.get(pk=uid)
+            user.set_password(password)
+            user.save()
+            messages.success(request, 'your password is resat successfully.')
+            return redirect('login')
+        else:
+            messages.error(request, "password do not match")
+            return redirect('resat_password')
+    else:
+        return render(request, 'account/resat_password.html')
